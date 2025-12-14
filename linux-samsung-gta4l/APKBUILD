@@ -1,0 +1,66 @@
+# Reference: <https://postmarketos.org/vendorkernel>
+# Kernel config based on: arch/arm64/configs/gta4l_eur_open_defconfig
+
+pkgname=linux-samsung-gta4l
+pkgver=4.19.300
+pkgrel=0
+pkgdesc="Samsung Galaxy Tab A7 10.4 2020 (LTE) kernel fork"
+arch="aarch64"
+_carch="arm64"
+_flavor="samsung-gta4l"
+url="https://kernel.org"
+license="GPL-2.0-only"
+options="!strip !check !tracedeps pmb:cross-native"
+makedepends="
+	bash
+	bc
+	bison
+	devicepkg-dev
+	findutils
+	flex
+	openssl-dev
+	perl
+	linux-headers
+	clang
+	xz
+"
+
+export CC="clang"	
+export HOSTCC="clang"
+
+# Source
+_repository="android_kernel_samsung_sm6115"
+_commit="381a5549ee66fa751f632ee0840f5631274209ee"
+_config="config-$_flavor.$arch"
+source="
+	$pkgname-$_commit.tar.gz::https://github.com/LineageOS/$_repository/archive/$_commit.tar.gz
+	$_config
+	avoid-assertion-failure.patch
+"
+builddir="$srcdir/$_repository-$_commit"
+_outdir="out"
+
+prepare() {
+	default_prepare
+	. downstreamkernel_prepare
+}
+
+build() {
+	unset LDFLAGS
+	make O="$_outdir" ARCH="$_carch" CC="${CC:-gcc}" \
+		KBUILD_BUILD_VERSION="$((pkgrel + 1 ))-postmarketOS"
+}
+
+package() {
+	downstreamkernel_package "$builddir" "$pkgdir" "$_carch" \
+		"$_flavor" "$_outdir"
+
+	make dtbs_install O="$_outdir" ARCH="$_carch" \
+		INSTALL_DTBS_PATH="$pkgdir"/boot/dtbs
+}
+
+sha512sums="
+f39b6e8038903187d73ea0c0cb0c672862639c768c0f2be755b5557c6081b4198e9b4249682baf3522b3980e70ef5d389819d6b68bc84b415f4156485af0abf9  linux-samsung-gta4l-381a5549ee66fa751f632ee0840f5631274209ee.tar.gz
+8efe2caa34a30a56029b585f901316f189dd520b7855dc3cf65649d40458a07b226e095353c2eae2f6ac10ae62f689d874e91fb6641552245f87436e6cd6e083  config-samsung-gta4l.aarch64
+f3886bff666e812b72aa4ecd9f3aae262e9732ae7ca3d899af42b875653bc0bce0e5e8ab8c092c1e077464e348036eafe0b10c8eeb71535bdfa0ddb4564e2553  avoid-assertion-failure.patch
+"

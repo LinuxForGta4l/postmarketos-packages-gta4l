@@ -1,0 +1,23 @@
+# Maintainer: V6lhost <v6lhost@proton.me>
+pkgname=firmware-samsung-gta4l
+pkgver=1
+pkgrel=0
+pkgdesc="Firmware for Samsung Galaxy Tab A7 10.4 2020"
+url="https://github.com/Matrixx-Devices/android_vendor_samsung_gta4l-common"
+arch="aarch64"
+license="proprietary"
+options="!strip !check !archcheck !tracedeps"
+
+_f="Himax_firmware_inx_fhd.bin"
+_commit="1376c2ffa863e40e5a5d19c775a9c5ad0a63e013"
+_url="$url/raw/$_commit/proprietary/vendor/firmware/"
+source="$pkgname-$_commit-$_f::$_url/$_f"
+
+package() {
+	install -Dm644 "$srcdir/$pkgname-$_commit-$_f" \
+		"$pkgdir/lib/firmware/postmarketos/$_f"
+}
+
+sha512sums="
+ba6ef3238b0ece972274fb4155392f3737d42bb2e47f32c146873a2929309144234428e664405c71797d1c4bbca341560c0a79eb4448141b2d09abfff7133733  firmware-samsung-gta4l-1376c2ffa863e40e5a5d19c775a9c5ad0a63e013-Himax_firmware_inx_fhd.bin
+"

@@ -1,0 +1,49 @@
+# Reference: <https://postmarketos.org/devicepkg>
+pkgname=device-samsung-gta4l
+pkgdesc="Samsung Galaxy Tab A7 10.4 2020 (LTE)"
+pkgver=1
+pkgrel=0
+url="https://postmarketos.org"
+license="MIT"
+arch="aarch64"
+options="!check !archcheck"
+depends="
+	linux-samsung-gta4l
+	mkbootimg
+	postmarketos-base
+"
+makedepends="devicepkg-dev"
+
+subpackages="
+	$pkgname-nonfree-firmware:nonfree_firmware
+"
+
+source="
+	deviceinfo
+	modules-initfs
+	98-touchscreen-cal.rules
+"
+
+build() {
+	devicepkg_build $startdir $pkgname
+}
+
+package() {
+	devicepkg_package $startdir $pkgname
+}
+
+nonfree_firmware() {
+	pkgdesc="Touchscreen firmware"
+	depends="firmware-samsung-gta4l"
+	mkdir "$subpkgdir"
+
+	# Touchscreen rotation fix
+	install -Dm644 "$srcdir"/98-touchscreen-cal.rules \
+		"$subpkgdir"/etc/udev/rules.d/98-touchscreen-cal.rules
+}
+
+sha512sums="
+aa0d476ac062f9b1f762c04d4a6b25efaa11450b2eb1c87b39ff1dc2d76b9b4ccca68283c81b30cc1d7dc6209b082897f8fcf0d3c3a373d950f98eb35fbe7d38  deviceinfo
+e70bae17df23dcaaaea0e2d3616556f04baa23f8ee1357785c0f539bf97282d8ddff53953e155b72689bb73beb38c2da3d08de2a61e866684edfa10a6593885d  modules-initfs
+3e5d3b3c19267454831d0f6528b17c65955c8e804d5b9d3b74b59fe17a4a0621b4fef415f7d20de27e7a4789e02ccf93efe77e7aa8b6a579a8f384e8e638a040  98-touchscreen-cal.rules
+"
