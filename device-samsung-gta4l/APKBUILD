@@ -9,6 +9,13 @@ arch="aarch64"
 options="!check !archcheck"
 depends="
 	linux-postmarketos-qcom-sm6115
+	firmware-samsung-gta4l-adreno
+	firmware-samsung-gta4l-adsp
+	firmware-samsung-gta4l-cdsp
+	firmware-samsung-gta4l-ipa
+	firmware-samsung-gta4l-radio
+	firmware-samsung-gta4l-rproc
+	firmware-samsung-gta4l-venus
 	mkbootimg
 	postmarketos-base
 "
@@ -28,6 +35,6 @@ package() {
 }
 
 sha512sums="
-8830745b165b40c87d083afef108f30c31ec807f84da8b53128080c1d41b99e3ae8d3affc538fa721bfc81091628a6085ae0fa93d93642e56914dab187e697d2  deviceinfo
+c9aab39c0f7f876248973c8203c471641a34037d917226eb2268976671b5361eb8d6ba9d39b4064f241f4188669c712afaa1a5183e6e61ca68fed06e651fd63d  deviceinfo
 e70bae17df23dcaaaea0e2d3616556f04baa23f8ee1357785c0f539bf97282d8ddff53953e155b72689bb73beb38c2da3d08de2a61e866684edfa10a6593885d  modules-initfs
 "

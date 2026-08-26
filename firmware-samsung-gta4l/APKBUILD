@@ -1,0 +1,99 @@
+# unmaintained
+maintainer=""
+pkgname=firmware-samsung-gta4l
+pkgver=0
+pkgrel=1
+pkgdesc="Firmware for Samsung Galaxy Tab A7 10.4 2020"
+subpackages="
+	$pkgname-adreno
+	$pkgname-adsp
+	$pkgname-cdsp
+	$pkgname-ipa
+	$pkgname-radio
+	$pkgname-rproc
+	$pkgname-rproc-openrc:rproc_openrc
+	$pkgname-venus
+	"
+url="https://github.com/LinuxForGta4l/firmware-samsung-gta4l"
+arch="aarch64"
+license="proprietary"
+options="!check !strip !archcheck !tracedeps pmb:cross-native"
+_commit="0a801b7edb2cb69bcb4f17261bd3a25dba304857"
+source="$pkgname-$_commit.tar.gz::https://github.com/LinuxForGta4l/firmware-samsung-gta4l/archive/$_commit.tar.gz"
+builddir="$srcdir/$pkgname-$_commit/"
+
+package() {
+	# parent package is empty
+	mkdir -p "$pkgdir"
+}
+
+adreno() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 adreno firmware"
+	depends="firmware-qcom-adreno-a610"
+
+	install -Dm644 "$builddir"/a610_zap.mbn -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+adsp() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 ADSP firmware"
+
+	install -Dm644 "$builddir"/adsp* -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+cdsp() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 CDSP firmware"
+
+	install -Dm644 "$builddir"/cdsp* -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+ipa() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 IPA firmware"
+
+	install -Dm644 "$builddir"/ipa_fws.mbn -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+radio() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 radio firmware"
+	depends="linux-firmware-ath10k"
+
+	install -Dm644 "$builddir"/modem*.jsn -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+	install -Dm644 "$builddir"/wlanmdsp.mbn -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+rproc() {
+	pkgdesc="Modem and Wifi services and configuration"
+	depends="
+		rmtfs
+		tqftpserv
+		pd-mapper
+	"
+	mkdir "$subpkgdir"
+}
+
+rproc_openrc() {
+	install_if="$pkgname-rproc openrc"
+	install="$subpkgname.post-install $subpkgname.post-upgrade"
+	depends="
+		openrc
+		pd-mapper-openrc
+		tqftpserv-openrc
+	"
+	mkdir "$subpkgdir"
+}
+
+venus() {
+	pkgdesc="Samsung Galaxy Tab A7 10.4 2020 venus firmware"
+
+	install -Dm644 "$builddir"/venus.mbn -t \
+		"$subpkgdir/lib/firmware/qcom/sm6115/Samsung/gta4l/"
+}
+
+sha512sums="
+5e73c653c67a51a7e44422ef6489a540d5901eea26eba3ed80e156caefa6885ef4a60b3e4d2e801ec99955e02318c7474902a9fe4ef759f6771540c07f6d4e6c  firmware-samsung-gta4l-0a801b7edb2cb69bcb4f17261bd3a25dba304857.tar.gz
+"
